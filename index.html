@@ -302,6 +302,34 @@
     .cart { position: relative; width: 100%; height: auto; }
     .cart .steam { animation: steam 3.2s ease-in-out infinite; }
     .cart .steam + .steam { animation-delay: -1.6s; }
+    /* The cart rolls in (wheels turning) the first time it scrolls into view, then settles */
+    .wheel, .spark { transform-box: fill-box; transform-origin: center; }
+    .tea-art.in .cart__body { animation: cart-in 1.7s cubic-bezier(.2,.8,.25,1) backwards; }
+    .tea-art.in .wheel { animation: wheel-in 1.7s cubic-bezier(.2,.8,.25,1) backwards; }
+    @keyframes cart-in {
+      0% { transform: translateX(-125%); }
+      72% { transform: translateX(3%); }
+      86% { transform: translateX(-1%); }
+      100% { transform: none; }
+    }
+    @keyframes wheel-in { from { transform: rotate(-1400deg); } to { transform: none; } }
+    /* Little touches once it's parked: drinks hop in turn, lights twinkle, sparkles shimmer */
+    .tea-art.in .cup { animation: cup-hop 5s ease-in-out 1.8s infinite; }
+    .tea-art.in .cup--2 { animation-delay: 2s; }
+    .tea-art.in .cup--3 { animation-delay: 2.2s; }
+    @keyframes cup-hop {
+      0%, 14%, 100% { transform: none; }
+      5% { transform: translateY(-8px); }
+      10% { transform: translateY(1px); }
+    }
+    .cart__lights circle { animation: twinkle 2.4s ease-in-out infinite; }
+    .cart__lights circle:nth-child(2n) { animation-delay: -1.2s; }
+    .cart__lights circle:nth-child(3n) { animation-duration: 1.8s; animation-delay: -.5s; }
+    @keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+    .spark { animation: sparkle 3s ease-in-out infinite; }
+    .spark:nth-child(2) { animation-delay: -1s; }
+    .spark:nth-child(3) { animation-delay: -2s; }
+    @keyframes sparkle { 0%, 100% { transform: none; opacity: 1; } 50% { transform: scale(.55) rotate(45deg); opacity: .45; } }
     @keyframes steam { 0%, 100% { opacity: .25; transform: translateY(2px); } 50% { opacity: .9; transform: translateY(-3px); } }
     .menu { background: var(--paper); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin: 26px 0; }
     .menu__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -726,6 +754,7 @@
               <clipPath id="awningClip"><rect x="40" y="70" width="280" height="50"/></clipPath>
             </defs>
             <ellipse cx="180" cy="312" rx="150" ry="9" fill="#2E1C12" opacity=".08"/>
+            <g class="cart__body">
             <rect x="58" y="112" width="8" height="96" rx="3" fill="#C9A98A"/>
             <rect x="294" y="112" width="8" height="96" rx="3" fill="#C9A98A"/>
             <path d="M64 40h232l26 32H38z" fill="#6B3FA8"/>
@@ -746,37 +775,44 @@
             </g>
             <!-- fairy lights -->
             <path d="M44 72 Q180 104 316 72" fill="none" stroke="#6B3FA8" stroke-width="1.2" opacity=".5"/>
-            <g fill="#FFD27A">
+            <g class="cart__lights" fill="#FFD27A">
               <circle cx="80" cy="82" r="3"/><circle cx="120" cy="89" r="3"/><circle cx="160" cy="92" r="3"/>
               <circle cx="200" cy="92" r="3"/><circle cx="240" cy="89" r="3"/><circle cx="280" cy="82" r="3"/>
             </g>
             <!-- taro boba -->
+            <g class="cup">
             <path d="M118 150 126 112" stroke="#6B3FA8" stroke-width="5" stroke-linecap="round"/>
             <path d="M90 154h40l-5 48H95z" fill="#DCC8F2"/>
             <path d="M88 154q22-22 44 0z" fill="#FFFDF9" stroke="#CDB8E8" stroke-width="1.5"/>
             <g fill="#3B2418"><circle cx="102" cy="195" r="3.2"/><circle cx="110" cy="197" r="3.2"/><circle cx="118" cy="194" r="3.2"/><circle cx="106" cy="189" r="3.2"/><circle cx="114" cy="189" r="3.2"/></g>
+            </g>
             <!-- milk tea boba -->
+            <g class="cup cup--2">
             <path d="M186 142 196 100" stroke="#8E3F17" stroke-width="5" stroke-linecap="round"/>
             <path d="M158 146h44l-6 56h-32z" fill="#E4C197"/>
             <path d="M156 146q24-24 48 0z" fill="#FFFDF9" stroke="#D8B88E" stroke-width="1.5"/>
             <g fill="#3B2418"><circle cx="171" cy="195" r="3.4"/><circle cx="180" cy="197" r="3.4"/><circle cx="189" cy="194" r="3.4"/><circle cx="175" cy="188" r="3.4"/><circle cx="185" cy="187" r="3.4"/></g>
+            </g>
             <!-- chai -->
             <path class="steam" d="M246 158q-6-8 0-15t0-15" fill="none" stroke="#B9A58F" stroke-width="2.2" stroke-linecap="round"/>
             <path class="steam" d="M258 160q-6-8 0-15t0-15" fill="none" stroke="#B9A58F" stroke-width="2.2" stroke-linecap="round"/>
+            <g class="cup cup--3">
             <path d="M234 166h36l-4 36h-28z" fill="#C98A4E"/>
             <path d="M234 166h36l-.8 7h-34.4z" fill="#FFFDF9" opacity=".6"/>
+            </g>
             <!-- counter + body -->
             <rect x="30" y="202" width="300" height="14" rx="6" fill="#6B3FA8"/>
             <rect x="42" y="216" width="276" height="66" rx="10" fill="#EEDCC0"/>
             <rect x="106" y="229" width="148" height="40" rx="20" fill="#FFFDF9"/>
             <text x="180" y="256" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="23" font-weight="700" fill="#6B3FA8">Dream Tea</text>
-            <circle cx="95" cy="288" r="19" fill="#2E1C12"/><circle cx="95" cy="288" r="6.5" fill="#EEDCC0"/>
-            <circle cx="265" cy="288" r="19" fill="#2E1C12"/><circle cx="265" cy="288" r="6.5" fill="#EEDCC0"/>
+            <g class="wheel"><circle cx="95" cy="288" r="19" fill="#2E1C12"/><path d="M95 273v30M80 288h30" stroke="#6E5A4A" stroke-width="3" stroke-linecap="round"/><circle cx="95" cy="288" r="6.5" fill="#EEDCC0"/></g>
+            <g class="wheel"><circle cx="265" cy="288" r="19" fill="#2E1C12"/><path d="M265 273v30M250 288h30" stroke="#6E5A4A" stroke-width="3" stroke-linecap="round"/><circle cx="265" cy="288" r="6.5" fill="#EEDCC0"/></g>
+            </g>
             <!-- sparkles -->
-            <g fill="#C79A3E">
-              <path d="M30 150l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>
-              <path d="M330 170l2.2 5 5 2.2-5 2.2-2.2 5-2.2-5-5-2.2 5-2.2z"/>
-              <path d="M320 20l2 4.6 4.6 2-4.6 2-2 4.6-2-4.6-4.6-2 4.6-2z"/>
+            <g class="cart__sparkles" fill="#C79A3E">
+              <path class="spark" d="M30 150l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>
+              <path class="spark" d="M330 170l2.2 5 5 2.2-5 2.2-2.2 5-2.2-5-5-2.2 5-2.2z"/>
+              <path class="spark" d="M320 20l2 4.6 4.6 2-4.6 2-2 4.6-2-4.6-4.6-2 4.6-2z"/>
             </g>
           </svg>
         </div>
