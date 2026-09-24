@@ -418,6 +418,14 @@
     .ig-fallback .ig__logo { width: 56px; height: 56px; border-radius: 18px; }
     .ig-fallback small { font-weight: 400; color: var(--muted); }
 
+    /* ---------- Testimonials ---------- */
+    .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    @media (max-width: 920px) { .quotes { grid-template-columns: 1fr; } }
+    .quote { position: relative; margin: 0; padding: 32px 28px 26px; border-radius: var(--radius); background: var(--paper); border: 1px solid var(--line); }
+    .quote::before { content: "\201C"; position: absolute; top: -6px; left: 22px; font-family: var(--display); font-size: 5rem; line-height: 1; color: var(--gold); }
+    .quote blockquote { margin: 18px 0 18px; font-family: var(--display); font-size: 1.45rem; line-height: 1.25; font-weight: 500; }
+    .quote figcaption { font-size: .88rem; color: var(--muted); display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+
     /* ---------- FAQ ---------- */
     .faq { max-width: 820px; margin-inline: auto; }
     .faq details { border-bottom: 1px solid var(--line); }
@@ -1000,6 +1008,35 @@
       </div>
     </section>
 
+    <!-- ================= SAMPLE REVIEWS (preview only) ================= -->
+    <!-- Placeholder quotes to show Nidha the layout. They only appear at nidhasevents.com/?preview,
+         so regular visitors never see made-up reviews. Swap in real reviews and move this
+         section out of the <template> to show it to everyone. -->
+    <template id="sampleReviews">
+      <section class="section" id="reviews" style="padding-bottom: 0;">
+        <div class="wrap">
+          <div class="section-head section-head--center reveal">
+            <p class="kicker">Kind words</p>
+            <h2>Loved by brides &amp; hosts</h2>
+          </div>
+          <div class="quotes">
+            <figure class="quote reveal">
+              <blockquote>The bridal henna was so detailed, and the stain came out incredibly dark.</blockquote>
+              <figcaption>Bride · Edison, NJ</figcaption>
+            </figure>
+            <figure class="quote reveal">
+              <blockquote>Booking henna, the DJ and the boba cart together saved us so much back-and-forth.</blockquote>
+              <figcaption>Sangeet host · Iselin, NJ</figcaption>
+            </figure>
+            <figure class="quote reveal">
+              <blockquote>The dry-ice first dance looks unreal in our wedding photos.</blockquote>
+              <figcaption>Newlyweds · Staten Island, NY</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+    </template>
+
     <!-- ================= FAQ ================= -->
     <section class="section" id="faq">
       <div class="wrap">
@@ -1188,6 +1225,12 @@
       document.documentElement.classList.add("js");
       var $ = function (s, r) { return (r || document).querySelector(s); };
       var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+      // Sample reviews only show on the private preview link (nidhasevents.com/?preview)
+      var sampleReviews = $("#sampleReviews");
+      if (sampleReviews && /[?&]preview\b/.test(location.search)) {
+        sampleReviews.replaceWith(sampleReviews.content.cloneNode(true));
+      }
 
       // Mobile menu
       var toggle = $(".nav__toggle"), links = $("#navLinks");
