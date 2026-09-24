@@ -446,7 +446,27 @@
 
     /* ---------- Booking ---------- */
     .book { background: var(--sand); }
-    .book .split { align-items: start; }
+    .book__grid {
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr;
+      grid-template-areas: "intro form" "extra form"; column-gap: clamp(36px, 6vw, 80px); align-items: start;
+    }
+    .book__intro { grid-area: intro; }
+    .book__extra { grid-area: extra; }
+    .book__intro .lead { margin-bottom: 0; }
+    .book .form { grid-area: form; }
+    @media (max-width: 920px) {
+      .book__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "intro" "form" "extra"; row-gap: 28px; }
+      .book__extra .steps { margin-top: 8px; }
+    }
+    /* A soft pulse so people see where to start after tapping a booking button */
+    .form:focus { outline: none; }
+    .form.spotlight { animation: spotlight 1.6s ease-out 2; }
+    .form.spotlight #f-name { border-color: var(--henna); background: #fff; }
+    @keyframes spotlight {
+      0% { box-shadow: var(--shadow), 0 0 0 0 rgba(142,63,23,.5); }
+      70% { box-shadow: var(--shadow), 0 0 0 16px rgba(142,63,23,0); }
+      100% { box-shadow: var(--shadow), 0 0 0 0 rgba(142,63,23,0); }
+    }
     .steps { list-style: none; padding: 0; margin: 30px 0; counter-reset: s; }
     .steps li { position: relative; padding: 0 0 22px 58px; counter-increment: s; }
     .steps li::before {
@@ -534,6 +554,7 @@
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation: none !important; transition: none !important; }
       .js .reveal { opacity: 1; transform: none; }
+      .form.spotlight { box-shadow: var(--shadow), 0 0 0 3px var(--henna); }
     }
   </style>
 </head>
@@ -571,7 +592,7 @@
         <a href="#bundles">Bundles</a>
         <a href="#gallery">Gallery</a>
         <a href="#faq">FAQ</a>
-        <a class="btn btn--primary btn--sm" href="#book">Check your date</a>
+        <a class="btn btn--primary btn--sm" href="#check">Check your date</a>
       </nav>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Menu"><span></span><span></span></button>
     </div>
@@ -586,7 +607,7 @@
           <h1>Henna, boba <em>&amp;</em> beats for every celebration.</h1>
           <p class="lead">Bridal mehndi, a boba &amp; chai cart, and a DJ who keeps the dance floor full — three services, one team, one easy booking.</p>
           <div class="hero__cta">
-            <a class="btn btn--primary" href="#book">Check your date <svg class="i"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn--primary" href="#check">Check your date <svg class="i"><use href="#i-arrow"/></svg></a>
             <a class="btn btn--ghost" href="#services">Explore services</a>
           </div>
           <ul class="pills" aria-label="Events we do">
@@ -650,7 +671,7 @@
               <li>Traditional bridal</li><li>Arabic</li><li>Indo-Arabic</li><li>Minimal &amp; modern</li><li>Kids' designs</li>
             </ul>
             <div class="row row--cta">
-              <a class="btn btn--primary" href="#book" data-preset="Bridal henna">Book henna</a>
+              <a class="btn btn--primary" href="#check" data-preset="Bridal henna">Book henna</a>
               <a class="btn btn--ghost" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram<span class="sr-only"> (@nidhashennadesigns)</span></a>
             </div>
           </div>
@@ -800,7 +821,7 @@
           </ul>
 
           <div class="row row--cta">
-            <a class="btn btn--tea" href="#book" data-preset="Boba cart">Book the cart</a>
+            <a class="btn btn--tea" href="#check" data-preset="Boba cart">Book the cart</a>
             <a class="btn btn--ghost" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram<span class="sr-only"> (@dreamteacart)</span></a>
           </div>
         </div>
@@ -819,7 +840,7 @@
               <li>Bollywood</li><li>Bhangra</li><li>Punjabi</li><li>Hip-hop &amp; R&amp;B</li><li>Top 40</li><li>Arabic</li>
             </ul>
             <div class="row row--cta">
-              <a class="btn btn--neon" href="#book" data-preset="DJ &amp; MC">Book the DJ</a>
+              <a class="btn btn--neon" href="#check" data-preset="DJ &amp; MC">Book the DJ</a>
               <a class="btn btn--light" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram<span class="sr-only"> (@litdjentertainment)</span></a>
             </div>
           </div>
@@ -960,7 +981,7 @@
             <h3>Nidha's Henna Designs</h3>
             <p>Bridal mehndi, party henna and festive Eid designs. Her newest work, straight from Instagram.</p>
             <div class="row row--cta">
-              <a class="btn btn--primary" href="#book" data-preset="Bridal henna">Book henna</a>
+              <a class="btn btn--primary" href="#check" data-preset="Bridal henna">Book henna</a>
               <a class="btn btn--ghost" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram<span class="sr-only"> (@nidhashennadesigns)</span></a>
             </div>
           </div>
@@ -978,7 +999,7 @@
             <h3>Dream Tea Cart</h3>
             <p>Cart setups, drink menus and custom cups from recent events.</p>
             <div class="row row--cta">
-              <a class="btn btn--tea" href="#book" data-preset="Boba cart">Book the cart</a>
+              <a class="btn btn--tea" href="#check" data-preset="Boba cart">Book the cart</a>
               <a class="btn btn--ghost" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram<span class="sr-only"> (@dreamteacart)</span></a>
             </div>
           </div>
@@ -996,7 +1017,7 @@
             <h3>Lit DJ Entertainment</h3>
             <p>Packed dance floors, lighting, dry ice and sparkler moments from recent events.</p>
             <div class="row row--cta">
-              <a class="btn btn--neon" href="#book" data-preset="DJ &amp; MC">Book the DJ</a>
+              <a class="btn btn--neon" href="#check" data-preset="DJ &amp; MC">Book the DJ</a>
               <a class="btn btn--ghost" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram<span class="sr-only"> (@litdjentertainment)</span></a>
             </div>
           </div>
@@ -1074,11 +1095,13 @@
 
     <!-- ================= BOOKING ================= -->
     <section class="section book" id="book">
-      <div class="wrap split">
-        <div class="reveal">
+      <div class="wrap book__grid">
+        <div class="book__intro reveal">
           <p class="kicker">Book</p>
           <h2>Let's plan your celebration</h2>
           <p class="lead">Tell us about your event and which services you're interested in. There's no commitment — just a quick way to check availability.</p>
+        </div>
+        <div class="book__extra reveal">
           <ol class="steps">
             <li><b>Send your details</b><span>Date, venue and the services you're after.</span></li>
             <li><b>Get a custom quote</b><span>We'll reply with availability and pricing.</span></li>
@@ -1090,7 +1113,7 @@
           </ul>
         </div>
 
-        <div class="form reveal">
+        <div class="form reveal" id="check" tabindex="-1" aria-label="Check your date form">
           <!-- Online requests aren't connected yet, so on submit the form copies the visitor's details
                and sends them to Instagram DMs instead. To make it email requests, get a free access key
                at web3forms.com and replace the "coming soon" handling in the script at the bottom. -->
@@ -1212,7 +1235,7 @@
           <ul>
             <li>Iselin, New Jersey</li>
             <li>Serving NJ, NY, PA &amp; CT</li>
-            <li><a href="#book">Check your date →</a></li>
+            <li><a href="#check">Check your date →</a></li>
           </ul>
         </div>
       </div>
@@ -1223,7 +1246,7 @@
     </div>
   </footer>
 
-  <a class="btn btn--primary mobile-cta" href="#book" id="mobileCta">Check your date <svg class="i"><use href="#i-arrow"/></svg></a>
+  <a class="btn btn--primary mobile-cta" href="#check" id="mobileCta">Check your date <svg class="i"><use href="#i-arrow"/></svg></a>
 
   <script>
     (function () {
@@ -1264,34 +1287,61 @@
       var reduceMotion = window.matchMedia ? matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
       function scrollBehavior() { return reduceMotion.matches ? "auto" : "smooth"; }
 
-      // Pre-fill the form from bundle cards and "Book ..." buttons
-      var form = $("#bookingForm"), hint = $("#bundleHint"), err = $("#formError"), thanks = $("#thanks");
+      // Booking buttons: take people straight to the form, fill in what they picked, and show where to start
+      var form = $("#bookingForm"), hint = $("#bundleHint"), err = $("#formError"), thanks = $("#thanks"), card = $("#check");
+      var DEFAULT_HINT = "Takes about a minute.", spotlightTimer;
       function showForm() {
         thanks.hidden = true; form.hidden = false;
         err.textContent = "";
       }
-      function prefill(services, eventType, label) {
-        showForm();
-        $$("input[name=services]", form).forEach(function (cb) { cb.checked = services.indexOf(cb.value) !== -1; });
-        if (eventType !== undefined) $("#f-type").value = eventType;
-        hint.textContent = label ? "Starting from the " + label + " bundle — adjust anything below." : "Takes about a minute.";
+      function goToForm() {
+        // Finish the card's fade-up first: scrolling to it mid-slide would park its top under the menu bar
+        card.style.transition = "none";
+        card.classList.add("in");
+        void card.offsetWidth;
+        card.style.transition = "";
+        card.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+        card.classList.remove("spotlight");
+        clearTimeout(spotlightTimer);
+        // start the pulse as the scroll lands, and let screen readers know where they are
+        spotlightTimer = setTimeout(function () {
+          void card.offsetWidth;
+          card.classList.add("spotlight");
+          // Phones: focus the card, not a field, so the keyboard doesn't pop up over the form
+          if (touch || form.hidden) card.focus({ preventScroll: true });
+          else $("#f-name").focus({ preventScroll: true });
+          spotlightTimer = setTimeout(function () { card.classList.remove("spotlight"); }, 3400);
+        }, reduceMotion.matches ? 0 : 450);
       }
+      function setServices(services, replace) {
+        $$("input[name=services]", form).forEach(function (cb) {
+          if (services.indexOf(cb.value) !== -1) cb.checked = true;
+          else if (replace) cb.checked = false;
+        });
+      }
+      // Bundles replace the selection and set the event type
       $$("[data-bundle]").forEach(function (btn) {
         btn.addEventListener("click", function () {
-          var list = btn.dataset.services ? btn.dataset.services.split("|") : [];
           var name = btn.dataset.bundle;
-          prefill(list, btn.dataset.event, name === "Custom" ? "" : name);
-          // Scroll to the form itself: on phones it sits below the section intro
-          $("#book .form").scrollIntoView({ behavior: scrollBehavior() });
-          setTimeout(function () { $("#f-name").focus({ preventScroll: true }); }, 600);
+          showForm();
+          setServices(btn.dataset.services ? btn.dataset.services.split("|") : [], true);
+          $("#f-type").value = btn.dataset.event;
+          hint.textContent = name === "Custom" ? "Pick the services you'd like below, then add your details." : "Starting from the " + name + " bundle. Fill in your details below and adjust anything you like.";
+          goToForm();
         });
       });
-      $$("[data-preset]").forEach(function (a) {
-        a.addEventListener("click", function () {
-          showForm();
-          a.dataset.preset.split("|").forEach(function (v) {
-            $$("input[name=services]", form).forEach(function (cb) { if (cb.value === v) cb.checked = true; });
-          });
+      // "Check your date" and "Book henna / cart / DJ" links; the Book links add their service to what's ticked
+      $$('a[href="#check"]').forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (a.dataset.preset) {
+            showForm();
+            setServices(a.dataset.preset.split("|"), false);
+            hint.textContent = a.dataset.preset + " added. Fill in your details below.";
+          } else if (hint.textContent === DEFAULT_HINT) {
+            hint.textContent = "Fill in your details below. It takes about a minute.";
+          }
+          goToForm();
         });
       });
 
