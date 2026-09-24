@@ -5,4 +5,4 @@ A one-page demo site for **Nidha's Henna Designs**, **Dream Tea Cart** and **Lit
 - `index.html`: the whole site (HTML, CSS and JS in one file, no build step). Open it in any browser.
 - `PUBLISHING.md`: step-by-step guide to buying a domain, hosting the site for free, and making the booking form work.
 
-Photos, the tea menu, prices and reviews are placeholders, marked "Demo" or "Sample" on the page.
+Still to confirm with Nidha: the tea cart menu, henna styles, DJ genres and FAQ answers. The gallery pulls live from her three Instagram accounts.

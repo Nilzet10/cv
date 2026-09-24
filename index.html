@@ -117,24 +117,6 @@
     .btn--light { border-color: rgba(255,255,255,.5); color: #fff; }
     .btn--light:hover { background: #fff; color: var(--night); border-color: #fff; }
 
-    /* ---------- Demo banner ---------- */
-    .demo-bar {
-      position: relative; background: var(--ink); color: var(--cream);
-      font-size: .85rem; text-align: center; padding: .6rem 3rem;
-    }
-    .demo-bar strong { color: var(--gold); }
-    .demo-bar button {
-      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-      background: none; border: 0; color: inherit; font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 6px 10px;
-    }
-    @media (max-width: 560px) { .demo-bar { font-size: .78rem; padding-left: 2.2rem; } }
-    .demo-note {
-      display: inline-flex; align-items: center; gap: .5em;
-      font-size: .82rem; color: var(--muted); border: 1px dashed rgba(46,28,18,.3);
-      border-radius: 10px; padding: .45em .8em; background: rgba(255,253,249,.7);
-    }
-    .demo-note::before { content: "Demo"; font-weight: 700; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--henna); }
-
     /* ---------- Nav ---------- */
     .nav {
       position: sticky; top: 0; z-index: 50;
@@ -321,6 +303,7 @@
     .menu { background: var(--paper); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin: 26px 0; }
     .menu__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
     .menu__head h3 { margin: 0; font-size: 1.7rem; }
+    .menu__note { font-size: .85rem; color: var(--muted); }
     .menu__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 480px) { .menu__cols { grid-template-columns: 1fr; } }
     .menu h4 { margin: 0 0 .6em; font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; color: #7A4FB5; }
@@ -434,15 +417,6 @@
     }
     .ig-fallback .ig__logo { width: 56px; height: 56px; border-radius: 18px; }
     .ig-fallback small { font-weight: 400; color: var(--muted); }
-
-    /* ---------- Testimonials ---------- */
-    .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    @media (max-width: 920px) { .quotes { grid-template-columns: 1fr; } }
-    .quote { position: relative; margin: 0; padding: 32px 28px 26px; border-radius: var(--radius); background: var(--paper); border: 1px solid var(--line); }
-    .quote::before { content: "\201C"; position: absolute; top: -6px; left: 22px; font-family: var(--display); font-size: 5rem; line-height: 1; color: var(--gold); }
-    .quote blockquote { margin: 18px 0 18px; font-family: var(--display); font-size: 1.45rem; line-height: 1.25; font-weight: 500; }
-    .quote figcaption { font-size: .88rem; color: var(--muted); display: flex; justify-content: space-between; gap: 10px; align-items: center; }
-    .tag { font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: .35em .7em; border-radius: 999px; border: 1px dashed currentColor; color: var(--henna-soft); }
 
     /* ---------- FAQ ---------- */
     .faq { max-width: 820px; margin-inline: auto; }
@@ -572,11 +546,6 @@
     <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
     <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7.5 2.8C19.5 15.4 12 20 12 20z"/></symbol>
   </svg>
-
-  <div class="demo-bar" id="demoBar" role="note">
-    <strong>Website demo</strong> — menu items, prices and reviews are placeholders until we swap in the real ones.
-    <button type="button" aria-label="Dismiss demo notice" data-dismiss>&times;</button>
-  </div>
 
   <header class="nav" id="top">
     <div class="wrap nav__inner">
@@ -788,7 +757,7 @@
           <div class="menu">
             <div class="menu__head">
               <h3>The menu</h3>
-              <span class="demo-note">sample — final menu from Nidha</span>
+              <span class="menu__note">Custom menus for every event</span>
             </div>
             <div class="menu__cols">
               <div>
@@ -1031,33 +1000,8 @@
       </div>
     </section>
 
-    <!-- ================= TESTIMONIALS ================= -->
-    <section class="section" id="reviews">
-      <div class="wrap">
-        <div class="section-head section-head--center reveal">
-          <p class="kicker">Kind words</p>
-          <h2>Loved by brides &amp; hosts</h2>
-          <p class="demo-note">sample quotes — we'll use her real Google &amp; Instagram reviews</p>
-        </div>
-        <div class="quotes">
-          <figure class="quote reveal">
-            <blockquote>The bridal henna was so detailed, and the stain came out incredibly dark.</blockquote>
-            <figcaption>Bride · Edison, NJ <span class="tag">Sample</span></figcaption>
-          </figure>
-          <figure class="quote reveal">
-            <blockquote>Booking henna, the DJ and the boba cart together saved us so much back-and-forth.</blockquote>
-            <figcaption>Sangeet host · Iselin, NJ <span class="tag">Sample</span></figcaption>
-          </figure>
-          <figure class="quote reveal">
-            <blockquote>The dry-ice first dance looks unreal in our wedding photos.</blockquote>
-            <figcaption>Newlyweds · Staten Island, NY <span class="tag">Sample</span></figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
     <!-- ================= FAQ ================= -->
-    <section class="section" id="faq" style="padding-top: 0;">
+    <section class="section" id="faq">
       <div class="wrap">
         <div class="section-head section-head--center reveal">
           <p class="kicker">FAQ</p>
@@ -1232,7 +1176,7 @@
       </div>
       <div class="footer__bottom">
         <span>© <span id="year">2026</span> Nidha's Events</span>
-        <span>Website demo</span>
+        <span>Henna · Boba &amp; chai cart · DJ</span>
       </div>
     </div>
   </footer>
@@ -1244,11 +1188,6 @@
       document.documentElement.classList.add("js");
       var $ = function (s, r) { return (r || document).querySelector(s); };
       var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-
-      // Demo banner
-      $$("[data-dismiss]").forEach(function (b) {
-        b.addEventListener("click", function () { $("#demoBar").remove(); });
-      });
 
       // Mobile menu
       var toggle = $(".nav__toggle"), links = $("#navLinks");

@@ -87,8 +87,7 @@ Either way, delete the demo `submit` handler in the `<script>` at the bottom of 
 Everything is in `index.html`. Search for these and replace them:
 
 - **Photos:** the Gallery section shows her three Instagram profiles live, so new posts appear on the site automatically. Each account must stay public, with "Embeds" allowed in its Instagram settings (on by default). To add your own photos elsewhere on the page, put them in an `images/` folder and shrink each one to under ~300 KB first with <https://squoosh.app> (WebP format), or the site will load slowly on phones.
-- **`demo-note`** and **`Sample`** labels: remove them once real content is in.
-- The **demo banner** at the top: delete the `<div class="demo-bar">` block.
+- **Reviews:** the reviews section was removed rather than show made-up quotes. Add it back with 3–6 real reviews (with permission) once she has them.
 - **Email:** the site currently points people to Instagram DMs. Once `hello@nidhasevents.com` forwards somewhere (Porkbun → Email Forwarding), add it back to the booking section and footer.
 - **Tea cart menu, henna styles, DJ genres, FAQ answers:** edit them to match what she actually offers.
 - The `<head>` section: update the title and the description. The link preview image is `share.jpg`; swap in a real photo later if you like (keep it 1200×630 and under ~300 KB).
