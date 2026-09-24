@@ -91,7 +91,7 @@ Everything is in `index.html`. Search for these and replace them:
 - The **demo banner** at the top: delete the `<div class="demo-bar">` block.
 - **Email:** the site currently points people to Instagram DMs. Once `hello@nidhasevents.com` forwards somewhere (Porkbun → Email Forwarding), add it back to the booking section and footer.
 - **Tea cart menu, henna styles, DJ genres, FAQ answers:** edit them to match what she actually offers.
-- The `<head>` section: update the title, the description, `og:image` (the photo shown when the link is shared on WhatsApp or Instagram), and the `url` in the JSON-LD block.
+- The `<head>` section: update the title and the description. The link preview image is `share.jpg`; swap in a real photo later if you like (keep it 1200×630 and under ~300 KB).
 
 ## Step 8: Help people find it
 
