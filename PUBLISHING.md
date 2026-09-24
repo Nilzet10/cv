@@ -8,9 +8,9 @@ The whole site is one file, `index.html`. There's no build step and no server co
 
 Pick whichever is easiest:
 
-- **Fastest link to text her:** go to <https://app.netlify.com/drop> and drag the `nidhas-events-demo` folder onto the page. In about 10 seconds you get a link like `random-name.netlify.app` that works on her phone. Anonymous drops can expire, so sign up (free) to keep the link working.
+- **Fastest link to text her:** go to <https://app.netlify.com/drop> and drag a folder containing `index.html` onto the page. In about 10 seconds you get a link like `random-name.netlify.app` that works on her phone. Anonymous drops can expire, so sign up (free) to keep the link working.
 - **On your laptop:** double-click `index.html` to open it in your browser.
-- **From this GitHub repo:** in the repo, go to Settings → Pages → *Deploy from a branch* and pick the branch. The demo then lives at `https://nilzet10.github.io/cv/nidhas-events-demo/`.
+- **From this GitHub repo:** in the repo, go to Settings → Pages → *Deploy from a branch* and pick the branch with `/ (root)`. The demo then lives at `https://nilzet10.github.io/cv/`, or at the custom domain once one is connected.
 
 ## Step 1: Decide these with her
 
