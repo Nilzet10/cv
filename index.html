@@ -230,8 +230,10 @@
     .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px, 6vw, 80px); align-items: center; }
     @media (max-width: 920px) { .split { grid-template-columns: 1fr; } }
     .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-    .handle { display: inline-flex; align-items: center; gap: .45em; font-weight: 700; text-decoration: none; font-size: .95rem; }
-    .handle:hover { text-decoration: underline; text-underline-offset: 3px; }
+    @media (max-width: 560px) {
+      .row--cta { flex-direction: column; align-items: stretch; }
+      .row--cta .btn { width: 100%; }
+    }
 
     /* ---------- Services overview ---------- */
     .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -646,9 +648,9 @@
             <ul class="styles" aria-label="Henna styles">
               <li>Traditional bridal</li><li>Arabic</li><li>Indo-Arabic</li><li>Minimal &amp; modern</li><li>Kids' designs</li>
             </ul>
-            <div class="row">
+            <div class="row row--cta">
               <a class="btn btn--primary" href="#book" data-preset="henna-bridal">Book henna</a>
-              <a class="handle" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>@nidhashennadesigns</a>
+              <a class="btn btn--ghost" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram</a>
             </div>
           </div>
           <div class="henna-visual reveal" aria-hidden="true">
@@ -796,9 +798,9 @@
             <li><svg class="i"><use href="#i-check"/></svg>Staffed service</li>
           </ul>
 
-          <div class="row">
+          <div class="row row--cta">
             <a class="btn btn--tea" href="#book" data-preset="tea-boba">Book the cart</a>
-            <a class="handle" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>@dreamteacart</a>
+            <a class="btn btn--ghost" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram</a>
           </div>
         </div>
       </div>
@@ -815,9 +817,9 @@
             <ul class="genres" aria-label="Music">
               <li>Bollywood</li><li>Bhangra</li><li>Punjabi</li><li>Hip-hop &amp; R&amp;B</li><li>Top 40</li><li>Arabic</li>
             </ul>
-            <div class="row">
+            <div class="row row--cta">
               <a class="btn btn--neon" href="#book" data-preset="dj">Check DJ availability</a>
-              <a class="handle" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>@litdjentertainment</a>
+              <a class="btn btn--light" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram</a>
             </div>
           </div>
           <div class="deck reveal" aria-hidden="true">
@@ -956,9 +958,9 @@
             <p class="kicker">@nidhashennadesigns</p>
             <h3>Nidha's Henna Designs</h3>
             <p>Bridal mehndi, party henna and festive Eid designs. Her newest work, straight from Instagram.</p>
-            <div class="row">
+            <div class="row row--cta">
               <a class="btn btn--primary" href="#book" data-preset="henna-bridal">Book henna</a>
-              <a class="btn btn--ghost" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener">Follow on Instagram</a>
+              <a class="btn btn--ghost" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram</a>
             </div>
           </div>
           <div class="ig-embed" data-handle="nidhashennadesigns">
@@ -974,9 +976,9 @@
             <p class="kicker">@dreamteacart</p>
             <h3>Dream Tea Cart</h3>
             <p>Cart setups, drink menus and custom cups from recent events.</p>
-            <div class="row">
+            <div class="row row--cta">
               <a class="btn btn--tea" href="#book" data-preset="tea-boba">Book the cart</a>
-              <a class="btn btn--ghost" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener">Follow on Instagram</a>
+              <a class="btn btn--ghost" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram</a>
             </div>
           </div>
           <div class="ig-embed" data-handle="dreamteacart">
@@ -992,9 +994,9 @@
             <p class="kicker">@litdjentertainment</p>
             <h3>Lit DJ Entertainment</h3>
             <p>Packed dance floors, lighting, dry ice and sparkler moments from recent events.</p>
-            <div class="row">
+            <div class="row row--cta">
               <a class="btn btn--neon" href="#book" data-preset="dj">Check DJ availability</a>
-              <a class="btn btn--ghost" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener">Follow on Instagram</a>
+              <a class="btn btn--ghost" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener"><svg class="i"><use href="#i-insta"/></svg>Follow on Instagram</a>
             </div>
           </div>
           <div class="ig-embed" data-handle="litdjentertainment">
@@ -1226,6 +1228,10 @@
       var $ = function (s, r) { return (r || document).querySelector(s); };
       var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
+      // Phones: open Instagram links in the same tab, which lets iOS reliably open the Instagram app
+      var touch = window.matchMedia && matchMedia("(hover: none) and (pointer: coarse)").matches;
+      function igTarget(a) { if (touch) a.removeAttribute("target"); else a.target = "_blank"; }
+
       // Sample reviews only show on the private preview link (nidhasevents.com/?preview)
       var sampleReviews = $("#sampleReviews");
       if (sampleReviews && /[?&]preview\b/.test(location.search)) {
@@ -1350,7 +1356,7 @@
           var a = document.createElement("a");
           a.className = "btn btn--ghost btn--sm";
           a.href = "https://ig.me/m/" + acc.handle;
-          a.target = "_blank"; a.rel = "noopener";
+          a.rel = "noopener"; igTarget(a);
           a.innerHTML = '<svg class="i"><use href="#i-insta"/></svg>';
           a.appendChild(document.createTextNode("DM @" + acc.handle));
           a.addEventListener("click", copyDetails);
@@ -1369,6 +1375,8 @@
         thanks.hidden = true; form.hidden = false;
         $("#f-name").focus();
       });
+
+      $$('a[href*="instagram.com"], a[href*="ig.me"]').forEach(igTarget);
 
       // Instagram tabs: embed each profile the first time its tab is shown
       var igTabs = $$(".ig"), igScript;
