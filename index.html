@@ -517,13 +517,21 @@
     .field label em, .field legend em { font-style: normal; color: var(--henna); }
     .field fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
     .field input, .field select, .field textarea {
-      width: 100%; font: inherit; font-size: 1rem; color: var(--ink);
+      display: block; width: 100%; min-width: 0; font: inherit; font-size: 1rem; color: var(--ink);
       background: var(--cream); border: 1.5px solid var(--line); border-radius: 12px; padding: .72em .9em;
       transition: border-color .2s ease, background-color .2s ease;
     }
+    .field input, .field select { height: 3.25rem; } /* same height for text, date and dropdown boxes in every browser */
     .field textarea { min-height: 110px; resize: vertical; }
     .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--henna); background: #fff; }
-    .field input:user-invalid, .field select:user-invalid { border-color: #C0392B; }
+    .field input:user-invalid, .field select:user-invalid { border-color: #B03A2E; }
+    .field__note { margin: 6px 0 0; font-size: .82rem; font-weight: 500; color: #B03A2E; }
+    /* iPhone Safari draws date boxes its own way: wider than the column, text centred, a different height.
+       Make it match the other fields (this block only applies on iOS). */
+    @supports (-webkit-touch-callout: none) {
+      .field input[type="date"] { -webkit-appearance: none; appearance: none; text-align: left; }
+      .field input[type="date"]::-webkit-date-and-time-value { text-align: left; margin: 0; }
+    }
     .choices { display: flex; flex-wrap: wrap; gap: 8px; }
     .choice { position: relative; }
     .choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
@@ -1171,7 +1179,8 @@
               </div>
               <div class="field">
                 <label for="f-date">Event date <em>*</em></label>
-                <input id="f-date" name="date" type="date" required>
+                <input id="f-date" name="date" type="date" required aria-describedby="dateNote">
+                <p class="field__note" id="dateNote" hidden>That date has passed. Please pick today or a later date.</p>
               </div>
               <div class="field">
                 <label for="f-type">Event type</label>
@@ -1317,7 +1326,11 @@
       // Footer year + no past dates in the picker
       $("#year").textContent = new Date().getFullYear();
       var d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-      $("#f-date").min = d.toISOString().slice(0, 10);
+      var dateInput = $("#f-date"), dateNote = $("#dateNote");
+      dateInput.min = d.toISOString().slice(0, 10);
+      function checkDate() { dateNote.hidden = !dateInput.validity.rangeUnderflow; }
+      dateInput.addEventListener("change", checkDate);
+      dateInput.addEventListener("blur", checkDate);
 
       // Smooth scrolling from script ignores the CSS reduced-motion rule, so check it here too
       var reduceMotion = window.matchMedia ? matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
@@ -1421,6 +1434,7 @@
         var chosen = $$("input[name=services]:checked", form).map(function (cb) { return cb.value; });
         if (!form.checkValidity()) {
           form.reportValidity();
+          checkDate();
           var missing = $$("[required]", form).some(function (el) { return el.validity.valueMissing; });
           err.textContent = missing ? "Please fill in the required fields." : "Please check your details and try again.";
           return;
