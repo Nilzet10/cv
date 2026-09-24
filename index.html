@@ -119,7 +119,7 @@
       position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
       background: none; border: 0; color: inherit; font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 6px 10px;
     }
-    @media (max-width: 560px) { .demo-bar { font-size: .78rem; padding-left: 2.2rem; } .tile figcaption { font-size: .74rem; } }
+    @media (max-width: 560px) { .demo-bar { font-size: .78rem; padding-left: 2.2rem; } }
     .demo-note {
       display: inline-flex; align-items: center; gap: .5em;
       font-size: .82rem; color: var(--muted); border: 1px dashed rgba(46,28,18,.3);
@@ -384,38 +384,48 @@
     .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin-top: 28px; font-size: .88rem; color: var(--muted); }
     .legend span { display: inline-flex; align-items: center; gap: .45em; }
 
-    /* ---------- Gallery ---------- */
+    /* ---------- Instagram gallery ---------- */
     .gallery { background: var(--paper); border-block: 1px solid var(--line); }
-    .grid-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 210px; grid-auto-flow: dense; gap: 14px; }
-    @media (max-width: 920px) { .grid-gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; } }
-    .tile { position: relative; overflow: hidden; margin: 0; border-radius: 20px; display: grid; place-items: center; }
-    .tile--tall { grid-row: span 2; }
-    .tile--wide { grid-column: span 2; }
-    .tile img { width: 100%; height: 100%; object-fit: cover; }
-    .tile__art { width: auto; height: 72%; max-height: 300px; max-width: 80%; opacity: .8; transition: transform .6s ease; }
-    .tile--tall .tile__art { height: auto; width: 72%; }
-    .tile:hover .tile__art { transform: scale(1.08) rotate(8deg); }
-    .tile figcaption {
-      position: absolute; left: 12px; bottom: 12px; right: 12px;
-      font-size: .82rem; font-weight: 700; padding: .45em .8em; border-radius: 12px; width: fit-content; max-width: calc(100% - 24px);
-      background: rgba(255,253,249,.92); color: var(--ink);
-    }
-    .t-henna { background: linear-gradient(160deg, #A24B1D, #6E2F10); color: #F1C98A; }
-    .t-henna2 { background: linear-gradient(160deg, #F3E2CC, #E4C39C); color: var(--henna); }
-    .t-tea { background: linear-gradient(160deg, #FCE3DB, #E9DDF6); color: #7A4FB5; }
-    .t-dj { background: radial-gradient(circle at 30% 20%, #3A2464, var(--night) 70%); color: var(--neon); }
-    .t-dj .tile__art, .t-tea .tile__art { height: 42%; }
-    .ig-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
-    @media (max-width: 760px) { .ig-row { grid-template-columns: 1fr; } }
+    .ig-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .ig {
-      display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 18px;
-      text-decoration: none; background: var(--cream); border: 1px solid var(--line); transition: transform .25s ease, box-shadow .25s ease;
+      display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px 18px; border-radius: 18px;
+      font: inherit; color: inherit; text-align: left; cursor: pointer;
+      background: var(--cream); border: 1.5px solid var(--line);
+      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
     }
-    .ig:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .ig:hover { box-shadow: var(--shadow); }
+    .ig[aria-selected="true"] { background: #fff; border-color: var(--henna); box-shadow: var(--shadow); }
     .ig__logo { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; color: #fff; background: linear-gradient(45deg, #F9A33C, #E1306C 50%, #833AB4); flex: none; }
     .ig__logo .i { width: 22px; height: 22px; }
-    .ig b { display: block; font-size: .98rem; }
-    .ig span { font-size: .85rem; color: var(--muted); }
+    .ig__text b { display: block; font-size: .98rem; }
+    .ig__text span { font-size: .85rem; color: var(--muted); }
+    .ig__short { display: none; }
+    @media (max-width: 760px) {
+      .ig-tabs { gap: 8px; }
+      .ig { flex-direction: column; gap: 8px; padding: 12px 6px; text-align: center; }
+      .ig__logo { width: 36px; height: 36px; border-radius: 12px; }
+      .ig__text { display: none; }
+      .ig__short { display: block; font-weight: 700; font-size: .86rem; }
+    }
+    .ig-panel { display: grid; grid-template-columns: 1fr minmax(0, 540px); gap: clamp(28px, 5vw, 64px); align-items: start; margin-top: 36px; }
+    .ig-panel[hidden] { display: none; }
+    .ig-info .kicker { margin-bottom: .6rem; }
+    .ig-info h3 { font-size: clamp(1.9rem, 3.4vw, 2.5rem); }
+    .ig-info p { color: var(--muted); max-width: 30em; }
+    @media (min-width: 921px) { .ig-info { position: sticky; top: 110px; } }
+    @media (max-width: 920px) { .ig-panel { grid-template-columns: 1fr; gap: 24px; } }
+    .ig-embed { display: flex; justify-content: center; min-height: 420px; }
+    .ig-embed .instagram-media {
+      width: calc(100% - 2px); max-width: 540px; margin: 1px auto; padding: 0; border: 0; border-radius: 14px;
+      background: #fff; box-shadow: 0 0 1px rgba(0,0,0,.5), 0 1px 10px rgba(0,0,0,.15);
+    }
+    .ig-fallback {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+      width: 100%; min-height: 420px; padding: 24px; border-radius: 14px; text-align: center; text-decoration: none;
+      font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line);
+    }
+    .ig-fallback .ig__logo { width: 56px; height: 56px; border-radius: 18px; }
+    .ig-fallback small { font-weight: 400; color: var(--muted); }
 
     /* ---------- Testimonials ---------- */
     .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -552,7 +562,7 @@
   </svg>
 
   <div class="demo-bar" id="demoBar" role="note">
-    <strong>Website demo</strong> — photos, menu items, prices and reviews are placeholders until we swap in the real ones.
+    <strong>Website demo</strong> — menu items, prices and reviews are placeholders until we swap in the real ones.
     <button type="button" aria-label="Dismiss demo notice" data-dismiss>&times;</button>
   </div>
 
@@ -923,65 +933,88 @@
       </div>
     </section>
 
-    <!-- ================= GALLERY ================= -->
+    <!-- ================= GALLERY (live Instagram) ================= -->
+    <!-- Each tab embeds that account's public Instagram profile, which updates on its own.
+         Needs: the account is public and "Embeds" is allowed in its Instagram settings (on by default). -->
     <section class="section gallery" id="gallery">
       <div class="wrap">
         <div class="section-head reveal">
           <p class="kicker">Gallery</p>
-          <h2>Recent work</h2>
-          <p class="demo-note">these tiles become her best Instagram photos</p>
+          <h2>Fresh from Instagram</h2>
+          <p class="muted">The latest posts from all three accounts, updated every time she posts.</p>
         </div>
 
-        <!-- To add a real photo, replace a tile's contents with:
-             <img src="images/bridal-1.webp" alt="Bridal henna on both hands" loading="lazy"> -->
-        <div class="grid-gallery">
-          <figure class="tile tile--tall t-henna reveal">
-            <svg class="tile__art" viewBox="0 0 100 100" aria-hidden="true"><use href="#mandala" width="100" height="100"/></svg>
-            <figcaption>Bridal · full hands</figcaption>
-          </figure>
-          <figure class="tile t-tea reveal">
-            <svg class="tile__art i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-boba"/></svg>
-            <figcaption>Boba cart setup</figcaption>
-          </figure>
-          <figure class="tile t-dj reveal">
-            <svg class="tile__art i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cloud"/></svg>
-            <figcaption>Dry-ice first dance</figcaption>
-          </figure>
-          <figure class="tile tile--tall t-henna2 reveal">
-            <svg class="tile__art" viewBox="0 0 100 100" aria-hidden="true"><use href="#mandala" width="100" height="100"/></svg>
-            <figcaption>Arabic · back of hand</figcaption>
-          </figure>
-          <figure class="tile tile--wide t-dj reveal">
-            <svg class="tile__art i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-light"/></svg>
-            <figcaption>Sangeet uplighting</figcaption>
-          </figure>
-          <figure class="tile t-henna2 reveal">
-            <svg class="tile__art" viewBox="0 0 100 100" aria-hidden="true"><use href="#mandala" width="100" height="100"/></svg>
-            <figcaption>Eid party henna</figcaption>
-          </figure>
-          <figure class="tile t-tea reveal">
-            <svg class="tile__art i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>
-            <figcaption>Custom cup stickers</figcaption>
-          </figure>
-          <figure class="tile tile--wide t-henna reveal">
-            <svg class="tile__art" viewBox="0 0 100 100" aria-hidden="true"><use href="#mandala" width="100" height="100"/></svg>
-            <figcaption>Bridal · feet</figcaption>
-          </figure>
+        <div class="ig-tabs reveal" role="tablist" aria-label="Instagram accounts">
+          <button class="ig" type="button" role="tab" id="tab-henna" aria-controls="ig-henna" aria-selected="true">
+            <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
+            <span class="ig__text"><b>@nidhashennadesigns</b><span>Henna designs</span></span>
+            <span class="ig__short">Henna</span>
+          </button>
+          <button class="ig" type="button" role="tab" id="tab-tea" aria-controls="ig-tea" aria-selected="false" tabindex="-1">
+            <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
+            <span class="ig__text"><b>@dreamteacart</b><span>Boba &amp; chai cart</span></span>
+            <span class="ig__short">Tea cart</span>
+          </button>
+          <button class="ig" type="button" role="tab" id="tab-dj" aria-controls="ig-dj" aria-selected="false" tabindex="-1">
+            <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
+            <span class="ig__text"><b>@litdjentertainment</b><span>DJ &amp; entertainment</span></span>
+            <span class="ig__short">DJ</span>
+          </button>
         </div>
 
-        <div class="ig-row">
-          <a class="ig reveal" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener">
-            <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
-            <span><b>@nidhashennadesigns</b><span>Henna designs</span></span>
-          </a>
-          <a class="ig reveal" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener">
-            <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
-            <span><b>@dreamteacart</b><span>Boba &amp; chai cart</span></span>
-          </a>
-          <a class="ig reveal" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener">
-            <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
-            <span><b>@litdjentertainment</b><span>DJ &amp; entertainment</span></span>
-          </a>
+        <div class="ig-panel" id="ig-henna" role="tabpanel" aria-labelledby="tab-henna">
+          <div class="ig-info">
+            <p class="kicker">@nidhashennadesigns</p>
+            <h3>Nidha's Henna Designs</h3>
+            <p>Bridal mehndi, party henna and festive Eid designs. Her newest work, straight from Instagram.</p>
+            <div class="row">
+              <a class="btn btn--primary" href="#book" data-preset="henna-bridal">Book henna</a>
+              <a class="btn btn--ghost" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener">Follow on Instagram</a>
+            </div>
+          </div>
+          <div class="ig-embed" data-handle="nidhashennadesigns">
+            <a class="ig-fallback" href="https://www.instagram.com/nidhashennadesigns/" target="_blank" rel="noopener">
+              <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
+              View @nidhashennadesigns on Instagram
+              <small>Latest posts load here</small>
+            </a>
+          </div>
+        </div>
+        <div class="ig-panel" id="ig-tea" role="tabpanel" aria-labelledby="tab-tea" hidden>
+          <div class="ig-info">
+            <p class="kicker">@dreamteacart</p>
+            <h3>Dream Tea Cart</h3>
+            <p>Cart setups, drink menus and custom cups from recent events.</p>
+            <div class="row">
+              <a class="btn btn--tea" href="#book" data-preset="tea-boba">Book the cart</a>
+              <a class="btn btn--ghost" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener">Follow on Instagram</a>
+            </div>
+          </div>
+          <div class="ig-embed" data-handle="dreamteacart">
+            <a class="ig-fallback" href="https://www.instagram.com/dreamteacart/" target="_blank" rel="noopener">
+              <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
+              View @dreamteacart on Instagram
+              <small>Latest posts load here</small>
+            </a>
+          </div>
+        </div>
+        <div class="ig-panel" id="ig-dj" role="tabpanel" aria-labelledby="tab-dj" hidden>
+          <div class="ig-info">
+            <p class="kicker">@litdjentertainment</p>
+            <h3>Lit DJ Entertainment</h3>
+            <p>Packed dance floors, lighting, dry ice and sparkler moments from recent events.</p>
+            <div class="row">
+              <a class="btn btn--neon" href="#book" data-preset="dj">Check DJ availability</a>
+              <a class="btn btn--ghost" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener">Follow on Instagram</a>
+            </div>
+          </div>
+          <div class="ig-embed" data-handle="litdjentertainment">
+            <a class="ig-fallback" href="https://www.instagram.com/litdjentertainment/" target="_blank" rel="noopener">
+              <span class="ig__logo"><svg class="i"><use href="#i-insta"/></svg></span>
+              View @litdjentertainment on Instagram
+              <small>Latest posts load here</small>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -1289,6 +1322,47 @@
         $("#f-name").focus();
       });
 
+      // Instagram tabs: embed each profile the first time its tab is shown
+      var igTabs = $$(".ig"), igScript;
+      function igEmbed(panel) {
+        var box = $(".ig-embed", panel);
+        if (box.dataset.ready) return;
+        box.dataset.ready = "1";
+        var q = document.createElement("blockquote");
+        q.className = "instagram-media";
+        q.setAttribute("data-instgrm-permalink", "https://www.instagram.com/" + box.dataset.handle + "/?utm_source=ig_embed&utm_campaign=loading");
+        q.setAttribute("data-instgrm-version", "14");
+        q.innerHTML = box.innerHTML; // the fallback link stays visible if Instagram can't load
+        box.innerHTML = "";
+        box.appendChild(q);
+        if (window.instgrm) {
+          window.instgrm.Embeds.process();
+        } else if (!igScript) {
+          igScript = document.createElement("script");
+          igScript.async = true;
+          igScript.src = "https://www.instagram.com/embed.js";
+          document.body.appendChild(igScript);
+        }
+      }
+      function igSelect(tab, focus) {
+        igTabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute("aria-selected", String(on));
+          t.tabIndex = on ? 0 : -1;
+          $("#" + t.getAttribute("aria-controls")).hidden = !on;
+        });
+        if (focus) tab.focus();
+        igEmbed($("#" + tab.getAttribute("aria-controls")));
+      }
+      igTabs.forEach(function (t, i) {
+        t.addEventListener("click", function () { igSelect(t); });
+        t.addEventListener("keydown", function (e) {
+          var step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+          if (step) { e.preventDefault(); igSelect(igTabs[(i + step + igTabs.length) % igTabs.length], true); }
+        });
+      });
+      var igFirst = function () { igEmbed($(".ig-panel:not([hidden])")); };
+
       // Reveal on scroll + hide the mobile booking bar near the form
       if ("IntersectionObserver" in window) {
         var io = new IntersectionObserver(function (entries) {
@@ -1302,8 +1376,14 @@
         new IntersectionObserver(function (entries) {
           cta.classList.toggle("hide", entries[0].isIntersecting);
         }, { threshold: 0.05 }).observe($("#book"));
+
+        // Only load Instagram's script once the gallery is close to the screen
+        new IntersectionObserver(function (entries, obs) {
+          if (entries[0].isIntersecting) { obs.disconnect(); igFirst(); }
+        }, { rootMargin: "600px 0px" }).observe($("#gallery"));
       } else {
         $$(".reveal").forEach(function (el) { el.classList.add("in"); });
+        igFirst();
       }
     })();
   </script>

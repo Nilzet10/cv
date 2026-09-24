@@ -86,7 +86,7 @@ Either way, delete the demo `submit` handler in the `<script>` at the bottom of 
 
 Everything is in `index.html`. Search for these and replace them:
 
-- **Photos:** in the Gallery section, replace each tile's `<svg>` with `<img src="images/bridal-1.webp" alt="Bridal henna on both hands" loading="lazy">` and put the photos in an `images/` folder. Shrink each photo to under ~300 KB first with <https://squoosh.app> (WebP format), or the site will load slowly on phones.
+- **Photos:** the Gallery section shows her three Instagram profiles live, so new posts appear on the site automatically. Each account must stay public, with "Embeds" allowed in its Instagram settings (on by default). To add your own photos elsewhere on the page, put them in an `images/` folder and shrink each one to under ~300 KB first with <https://squoosh.app> (WebP format), or the site will load slowly on phones.
 - **`demo-note`** and **`Sample`** labels: remove them once real content is in.
 - The **demo banner** at the top: delete the `<div class="demo-bar">` block.
 - **`hello@nidhasevents.com`:** replace with the real email.
