@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nidha's Events</title>
-  <!-- The demo moved to the site root; keep old shared links working -->
+  <!-- The demo moved to the site root; keep old shared links working.
+       The script keeps any ?query or #section from the old link; the meta refresh covers no-JS visitors. -->
+  <script>location.replace("../" + location.search + location.hash);</script>
   <meta http-equiv="refresh" content="0; url=../">
   <link rel="canonical" href="../">
 </head>
