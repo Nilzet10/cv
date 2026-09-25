@@ -37,6 +37,7 @@
     "url": "https://nidhasevents.com/",
     "address": { "@type": "PostalAddress", "addressLocality": "Iselin", "addressRegion": "NJ", "addressCountry": "US" },
     "telephone": "+1-848-667-1264",
+    "email": "nidha@nidhasevents.com",
     "areaServed": ["New Jersey", "New York", "Pennsylvania", "Connecticut"],
     "sameAs": [
       "https://www.instagram.com/nidhashennadesigns/",
@@ -619,6 +620,7 @@
     <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 11.6a8.4 8.4 0 0 1-12.3 7.4L3.5 20.5l1.6-4.5a8.4 8.4 0 1 1 15.4-4.4z"/><path d="M9 9.5c.4 2.3 2.2 4.1 4.5 4.6"/></symbol>
     <symbol id="i-sms" viewBox="0 0 24 24"><path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-5 4v-4a1.5 1.5 0 0 1-1.5-1.5V6A1.5 1.5 0 0 1 5 4.5z"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01" stroke-width="2.4"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5.2 3.5h3.1l1.8 4.6-2.3 1.4a11.5 11.5 0 0 0 6.7 6.7l1.4-2.3 4.6 1.8v3.1a2 2 0 0 1-2.1 2A16.6 16.6 0 0 1 3.2 5.6a2 2 0 0 1 2-2.1z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></symbol>
     <symbol id="i-insta" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
   </svg>
@@ -1163,6 +1165,7 @@
           <ul class="contact-list">
             <li><svg class="i"><use href="#i-phone"/></svg><span>Call, text or <a href="https://wa.me/18486671264" target="_blank" rel="noopener">WhatsApp</a>: <a href="tel:+18486671264">(848) 667-1264</a></span></li>
             <li><svg class="i"><use href="#i-insta"/></svg><span>DM us on Instagram: <a href="https://ig.me/m/nidhashennadesigns" target="_blank" rel="noopener">henna</a> · <a href="https://ig.me/m/dreamteacart" target="_blank" rel="noopener">tea cart</a> · <a href="https://ig.me/m/litdjentertainment" target="_blank" rel="noopener">DJ</a></span></li>
+            <li><svg class="i"><use href="#i-mail"/></svg><a href="mailto:nidha@nidhasevents.com">nidha@nidhasevents.com</a></li>
             <li><svg class="i"><use href="#i-pin"/></svg>Iselin, NJ · Serving NJ, NY, PA &amp; CT</li>
           </ul>
         </div>
@@ -1299,6 +1302,7 @@
           <ul>
             <li><a href="tel:+18486671264">(848) 667-1264</a></li>
             <li><a href="https://wa.me/18486671264" target="_blank" rel="noopener">WhatsApp us</a></li>
+            <li><a href="mailto:nidha@nidhasevents.com">nidha@nidhasevents.com</a></li>
             <li>Iselin, New Jersey</li>
             <li>Serving NJ, NY, PA &amp; CT</li>
             <li><a href="#check">Check your date →</a></li>
@@ -1462,7 +1466,7 @@
       // Booking requests. With a Web3Forms access key (free, web3forms.com) the form emails every request
       // to Nidha and offers WhatsApp/text as a faster lane. Without one, visitors send their details
       // themselves by WhatsApp, text or Instagram. If sending ever fails, they get those options instead.
-      var WEB3FORMS_KEY = ""; // paste the access key between the quotes to switch automatic sending on
+      var WEB3FORMS_KEY = "f3fd8af0-4a1b-4d29-8ae0-693c0b9a2272"; // Web3Forms access key: requests go to nidha@nidhasevents.com. Set to "" to switch automatic sending off
       if (WEB3FORMS_KEY) {
         $("#submitLabel").textContent = "Send request";
         $("#formFootNote").textContent = "Your request goes straight to Nidha. We'll only use your details to reply about your event.";
