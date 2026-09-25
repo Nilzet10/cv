@@ -1185,7 +1185,7 @@
               <div class="field">
                 <label for="f-phone">Phone <em>*</em></label>
                 <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(732) 555-0100" required aria-describedby="phoneNote">
-                <p class="field__note" id="phoneNote" hidden>Please enter a 10-digit phone number.</p>
+                <p class="field__note" id="phoneNote" hidden>Please enter a valid 10-digit phone number, like (732) 555-0100.</p>
               </div>
               <div class="field full">
                 <label for="f-email">Email</label>
@@ -1372,12 +1372,13 @@
         var v = phoneInput.value.trim(), d = v.replace(/\D/g, "");
         if (!v) return true; // "required" covers an empty box
         var n = d[0] === "1" ? d.slice(1) : d;
-        // US: 10 digits (after an optional leading 1). Other countries: starts with + but not +1, 8–15 digits.
-        return n.length === 10 || (v[0] === "+" && d[0] !== "1" && d.length >= 8 && d.length <= 15);
+        // US: 10 digits after an optional leading 1, and area code / exchange can't start with 0 or 1.
+        // Other countries: starts with + but not +1, 8–15 digits.
+        return /^[2-9]\d{2}[2-9]\d{6}$/.test(n) || (v[0] === "+" && d[0] !== "1" && d.length >= 8 && d.length <= 15);
       }
       function checkPhone(show) {
         var ok = phoneOk();
-        phoneInput.setCustomValidity(ok ? "" : "Please enter a 10-digit phone number.");
+        phoneInput.setCustomValidity(ok ? "" : "Please enter a valid 10-digit phone number.");
         if (show || ok) phoneNote.hidden = ok;
       }
       phoneInput.addEventListener("input", function (e) {
