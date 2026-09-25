@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /nidhas-events-demo/
+
+Sitemap: https://nidhasevents.com/sitemap.xml

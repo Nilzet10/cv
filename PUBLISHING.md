@@ -96,6 +96,15 @@ Everything is in `index.html`. Search for these and replace them:
 
 ## Step 8: Help people find it
 
+**Already on the site:** favicon and home-screen icons, `sitemap.xml`, `robots.txt`, a branded 404 page and a link-preview image (`share.jpg`).
+
+**Google Search Console (free):** at <https://search.google.com/search-console>, add a **Domain** property for `nidhasevents.com`, copy the `google-site-verification=…` TXT record into Porkbun's DNS (Type TXT, Host blank), verify, then submit `https://nidhasevents.com/sitemap.xml` under Sitemaps.
+
+**Visitor stats (free, no cookies):** sign up at <https://cloud.umami.is>, add the website `nidhasevents.com`, and paste its Website ID into `var UMAMI_WEBSITE_ID = "";` in `index.html`. Page views and taps on the booking, WhatsApp, text and Instagram buttons then show up in the Umami dashboard.
+
+**QR code:** `print/booking-card-4x6.pdf` prints as a 4×6 photo; `print/qr-nidhasevents.png` is the plain code (it opens `nidhasevents.com/?ref=qr`).
+
+
 1. **Google Business Profile** (free, and the biggest win for a local business): <https://business.google.com>. Claim or create a profile for each business, add the website link, photos and hours, and ask happy clients to leave Google reviews. This is what shows up for "henna artist near me".
 2. **Instagram:** put the website link in all three bios. Link to sections directly, e.g. `herdomain.com/#dj` from the DJ account.
 3. **Google Search Console** (<https://search.google.com/search-console>): verify the domain so Google indexes the site quickly.

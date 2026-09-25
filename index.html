@@ -21,7 +21,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://nidhasevents.com/share.jpg">
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-32 -32 64 64'%3E%3Ccircle r='31' fill='%238E3F17'/%3E%3Cg fill='%23FBF6EE'%3E%3Cellipse rx='5' ry='11' cy='-15'/%3E%3Cellipse rx='5' ry='11' cy='-15' transform='rotate(45)'/%3E%3Cellipse rx='5' ry='11' cy='-15' transform='rotate(90)'/%3E%3Cellipse rx='5' ry='11' cy='-15' transform='rotate(135)'/%3E%3Cellipse rx='5' ry='11' cy='-15' transform='rotate(180)'/%3E%3Cellipse rx='5' ry='11' cy='-15' transform='rotate(225)'/%3E%3Cellipse rx='5' ry='11' cy='-15' transform='rotate(270)'/%3E%3Cellipse rx='5' ry='11' cy='-15' transform='rotate(315)'/%3E%3C/g%3E%3Ccircle r='5' fill='%23C79A3E'/%3E%3C/svg%3E">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1324,6 +1327,20 @@
       var $ = function (s, r) { return (r || document).querySelector(s); };
       var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
+      // Visitor stats (Umami, free, no cookies). Paste the Website ID from cloud.umami.is to switch them on.
+      var UMAMI_WEBSITE_ID = "";
+      if (UMAMI_WEBSITE_ID) {
+        var um = document.createElement("script");
+        um.defer = true;
+        um.src = "https://cloud.umami.is/script.js";
+        um.setAttribute("data-website-id", UMAMI_WEBSITE_ID);
+        um.setAttribute("data-domains", "nidhasevents.com"); // tests and previews aren't counted
+        document.head.appendChild(um);
+      }
+      function track(name, data) { if (window.umami && window.umami.track) window.umami.track(name, data); }
+      // Name the taps worth counting; Umami records clicks on anything with data-umami-event
+      function label(sel, name) { $$(sel).forEach(function (el) { el.setAttribute("data-umami-event", typeof name === "function" ? name(el) : name); }); }
+
       // Phones: open Instagram and WhatsApp links in the same tab, which lets iOS reliably open the app
       var touch = window.matchMedia && matchMedia("(hover: none) and (pointer: coarse)").matches;
       function appTarget(a) { if (touch) a.removeAttribute("target"); else a.target = "_blank"; }
@@ -1602,6 +1619,7 @@
         $("#dmStep").hidden = true;
         var first = data.get("name").split(/\s+/)[0];
         function showThanks(state) {
+          track(state === "sent" ? "Booking request sent" : state === "failed" ? "Booking request failed" : "Booking details shown", { services: chosen.length });
           var copy = {
             sent: ["Request sent, " + first + "!", "Nidha will reach out to you soon at " + data.get("phone") + " with availability and a quote."],
             failed: ["Almost there, " + first + "!", "We couldn't send your request automatically. Please send it to Nidha directly: your message is already written, just tap send."],
@@ -1629,6 +1647,17 @@
       });
 
       $$('a[href^="https://www.instagram.com/"], a[href^="https://ig.me/"], a[href^="https://wa.me/"]').forEach(appTarget);
+
+      label('a[href="#check"]', function (a) { return a.dataset.preset ? "Book: " + a.dataset.preset : "Check your date"; });
+      label("[data-bundle]", function (b) { return "Bundle: " + b.dataset.bundle; });
+      label('a[href^="https://www.instagram.com/"]', function (a) { return "Instagram: @" + a.getAttribute("href").split("/")[3]; });
+      label('a[href^="tel:"]', "Call");
+      label('a[href^="mailto:"]', "Email");
+      label(".contact-list a[href^=\"https://wa.me/\"], .footer a[href^=\"https://wa.me/\"]", "WhatsApp (contact)");
+      label("#sendWhatsApp", "Send on WhatsApp");
+      label("#sendText", "Send as a text");
+      label("#copyDetails", "Copy for Instagram DM");
+      label(".ig", function (t) { return "Gallery tab: " + t.id.replace("tab-", ""); });
 
       // Instagram tabs: embed each profile the first time its tab is shown
       var igTabs = $$(".ig"), igScript;
