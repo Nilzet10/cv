@@ -1474,7 +1474,11 @@
       function sendRequest(rows, data) {
         var body = {
           access_key: WEB3FORMS_KEY,
-          subject: "New booking request: " + data.get("name") + " · " + rows.filter(function (r) { return r[0] === "Date"; })[0][1],
+          // The subject carries the key details so a text alert (e.g. Zapier SMS) can simply send the subject
+          subject: "New booking request: " + ["Name", "Phone", "Date", "Event", "Services"].map(function (k) {
+            var r = rows.filter(function (x) { return x[0] === k; })[0];
+            return r && r[1] !== "—" ? r[1] : "";
+          }).filter(Boolean).join(" · "),
           from_name: "Nidha's Events website",
           botcheck: data.get("botcheck") ? true : false
         };
