@@ -66,16 +66,18 @@ The host's dashboard walks you through this. Choose **"Add custom domain"** and 
 
 DNS changes take anywhere from a few minutes to a few hours. HTTPS (the padlock) is free and automatic on all three hosts.
 
-## Step 5: Make the booking form actually send
+## Step 5: Make the booking form send requests to Nidha
 
-Right now the form only shows a thank-you message. Pick one of these to make it deliver requests:
+The form is already wired for **Web3Forms** (free, about 250 requests a month). Until a key is added, visitors send their details themselves by WhatsApp, text or Instagram, with the message already written for them.
 
-- **Netlify Forms** (if you host on Netlify): add `name="booking" method="POST" data-netlify="true"` to the `<form>` tag. Submissions appear in the Netlify dashboard and can be emailed to her.
-- **Formspree** (<https://formspree.io>) or **Web3Forms** (<https://web3forms.com>): create a free form, then set the form's `action` to the URL they give you, plus `method="POST"`.
+1. Go to <https://web3forms.com>, enter the email Nidha wants requests sent to, and copy the **access key** they email to that inbox.
+2. In `index.html`, find `var WEB3FORMS_KEY = "";` and paste the key between the quotes.
 
-Either way, delete the demo `submit` handler in the `<script>` at the bottom of `index.html` (the part that calls `e.preventDefault()`). Or keep it and send the data with `fetch()` so the thank-you screen still shows.
+That's it. The button changes to **Send request**, every request is emailed to her (tapping Reply answers the customer), and the confirmation screen offers WhatsApp or text as a faster lane. If sending ever fails, visitors are shown the WhatsApp, text and Instagram options instead, so no request is lost.
 
-**Test it with a real submission before you announce the site.**
+**Optional texts:** to also get each request as a text, connect her Gmail to a free Zapier account ("New email matching search" → "SMS by Zapier" to her verified number).
+
+**Send one real test request before you announce the site.**
 
 ## Step 6: A professional email address (optional)
 

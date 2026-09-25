@@ -111,6 +111,7 @@
       transition: transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
     }
     .btn:hover { transform: translateY(-2px); }
+    .btn:disabled { opacity: .7; cursor: progress; transform: none; }
     .btn--primary { background: var(--henna); color: #fff; }
     .btn--primary:hover { background: var(--henna-deep); }
     .btn--ghost { border-color: currentColor; background: transparent; }
@@ -554,6 +555,7 @@
     .thanks dd { margin: 0; color: var(--muted); white-space: pre-line; overflow-wrap: anywhere; }
     .thanks__actions { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 0 0 18px; }
     .thanks__status { min-height: 1.3em; margin: 0; font-size: .9rem; font-weight: 500; color: var(--henna); }
+    .hp { display: none; }
     .send-links { display: grid; gap: 10px; width: 100%; max-width: 340px; margin-bottom: 6px; }
     .btn--whatsapp { background: #0F7A5C; color: #fff; }
     .btn--whatsapp:hover { background: #0B6048; }
@@ -1179,7 +1181,8 @@
               </div>
               <div class="field">
                 <label for="f-phone">Phone <em>*</em></label>
-                <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+                <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(732) 555-0100" required aria-describedby="phoneNote">
+                <p class="field__note" id="phoneNote" hidden>Please enter a 10-digit phone number.</p>
               </div>
               <div class="field full">
                 <label for="f-email">Email</label>
@@ -1229,19 +1232,22 @@
                 <textarea id="f-msg" name="message" placeholder="Timings, theme colors, must-play songs…"></textarea>
               </div>
             </div>
+            <!-- Spam trap: people never see or tick this; bots that fill every field do -->
+            <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
             <p class="form__error" id="formError" role="alert"></p>
             <div class="form__foot">
-              <small>Online booking is coming soon. Next, you'll send your details to Nidha by WhatsApp, text or Instagram, already written for you.</small>
-              <button class="btn btn--primary" type="submit">Continue <svg class="i"><use href="#i-arrow"/></svg></button>
+              <small id="formFootNote">Online booking is coming soon. Next, you'll send your details to Nidha by WhatsApp, text or Instagram, already written for you.</small>
+              <button class="btn btn--primary" type="submit" id="submitBtn"><span id="submitLabel">Continue</span> <svg class="i"><use href="#i-arrow"/></svg></button>
             </div>
           </form>
 
           <div class="thanks" id="thanks" hidden tabindex="-1">
             <svg class="thanks__mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#mandala" width="100" height="100"/></svg>
-            <h3>Almost there, <span data-out="name"></span>!</h3>
-            <p class="muted">Online booking is coming soon. Send your details straight to Nidha: your message is already written, just tap send. We'll reply with availability and a quote.</p>
+            <h3 id="thanksTitle">Almost there!</h3>
+            <p class="muted" id="thanksText">Online booking is coming soon. Send your details straight to Nidha: your message is already written, just tap send. We'll reply with availability and a quote.</p>
             <dl id="summary"></dl>
             <div class="thanks__actions">
+              <p class="dm-label" id="fastLane" hidden>Want a faster reply? Message her now:</p>
               <div class="send-links">
                 <a class="btn btn--whatsapp" id="sendWhatsApp" href="https://wa.me/18486671264" target="_blank" rel="noopener"><svg class="i"><use href="#i-chat"/></svg>Send on WhatsApp</a>
                 <a class="btn btn--primary" id="sendText" href="sms:+18486671264" hidden><svg class="i"><use href="#i-sms"/></svg>Send as a text</a>
@@ -1250,7 +1256,7 @@
               <button class="btn btn--ghost btn--sm" type="button" id="copyDetails"><svg class="i"><use href="#i-check"/></svg>Copy my details for a DM</button>
               <p class="thanks__status" id="copyStatus" role="status"></p>
               <div class="dm-step" id="dmStep" hidden>
-                <p class="dm-label">Now send them to:</p>
+                <p class="dm-label">Now paste them in a message to:</p>
                 <div class="dm-links" id="dmLinks"></div>
               </div>
             </div>
@@ -1347,6 +1353,50 @@
       dateInput.addEventListener("change", checkDate);
       dateInput.addEventListener("blur", checkDate);
 
+      // Phone: format US numbers as (732) 555-0100 while typing. Numbers starting with + (international)
+      // are left as typed.
+      var phoneInput = $("#f-phone"), phoneNote = $("#phoneNote"), lastDigits = "";
+      function formatPhone(d) {
+        var country = d[0] === "1" ? "+1 " : "", n = country ? d.slice(1) : d;
+        if (n.length > 10) return null;
+        if (!n.length) return country.trim();
+        if (n.length < 4) return country + "(" + n;
+        if (n.length < 7) return country + "(" + n.slice(0, 3) + ") " + n.slice(3);
+        return country + "(" + n.slice(0, 3) + ") " + n.slice(3, 6) + "-" + n.slice(6);
+      }
+      function phoneOk() {
+        var v = phoneInput.value.trim(), d = v.replace(/\D/g, "");
+        if (!v) return true; // "required" covers an empty box
+        var n = d[0] === "1" ? d.slice(1) : d;
+        // US: 10 digits (after an optional leading 1). Other countries: starts with + but not +1, 8–15 digits.
+        return n.length === 10 || (v[0] === "+" && d[0] !== "1" && d.length >= 8 && d.length <= 15);
+      }
+      function checkPhone(show) {
+        var ok = phoneOk();
+        phoneInput.setCustomValidity(ok ? "" : "Please enter a 10-digit phone number.");
+        if (show || ok) phoneNote.hidden = ok;
+      }
+      phoneInput.addEventListener("input", function (e) {
+        var v = phoneInput.value;
+        if (v.trim()[0] === "+" && v.replace(/\D/g, "")[0] !== "1") { checkPhone(false); return; }
+        var caret = phoneInput.selectionStart == null ? v.length : phoneInput.selectionStart;
+        var before = v.slice(0, caret).replace(/\D/g, "").length, d = v.replace(/\D/g, "");
+        // Backspacing over a bracket, space or dash removes the digit in front of it too
+        if (e.inputType === "deleteContentBackward" && d === lastDigits && before > 0) {
+          d = d.slice(0, before - 1) + d.slice(before); before--;
+        }
+        var f = formatPhone(d);
+        if (f !== null) {
+          phoneInput.value = f;
+          var pos = 0, seen = 0; // keep the cursor after the same number of digits
+          while (pos < f.length && seen < before) { if (/\d/.test(f[pos])) seen++; pos++; }
+          if (document.activeElement === phoneInput) phoneInput.setSelectionRange(pos, pos);
+        }
+        lastDigits = d;
+        checkPhone(false);
+      });
+      phoneInput.addEventListener("blur", function () { checkPhone(true); });
+
       // Smooth scrolling from script ignores the CSS reduced-motion rule, so check it here too
       var reduceMotion = window.matchMedia ? matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
       function scrollBehavior() { return reduceMotion.matches ? "auto" : "smooth"; }
@@ -1409,7 +1459,36 @@
         });
       });
 
-      // Until online requests are connected: validate, then help the visitor send their details by Instagram DM
+      // Booking requests. With a Web3Forms access key (free, web3forms.com) the form emails every request
+      // to Nidha and offers WhatsApp/text as a faster lane. Without one, visitors send their details
+      // themselves by WhatsApp, text or Instagram. If sending ever fails, they get those options instead.
+      var WEB3FORMS_KEY = ""; // paste the access key between the quotes to switch automatic sending on
+      if (WEB3FORMS_KEY) {
+        $("#submitLabel").textContent = "Send request";
+        $("#formFootNote").textContent = "Your request goes straight to Nidha. We'll only use your details to reply about your event.";
+      }
+      function sendRequest(rows, data) {
+        var body = {
+          access_key: WEB3FORMS_KEY,
+          subject: "New booking request: " + data.get("name") + " · " + rows.filter(function (r) { return r[0] === "Date"; })[0][1],
+          from_name: "Nidha's Events website",
+          botcheck: data.get("botcheck") ? true : false
+        };
+        if (data.get("email")) body.replyto = data.get("email");
+        rows.forEach(function (r) { body[r[0]] = r[1]; });
+        var ctrl = window.AbortController ? new AbortController() : null;
+        var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
+        return fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(body),
+          signal: ctrl ? ctrl.signal : undefined
+        }).then(function (res) { return res.json(); })
+          .then(function (json) { clearTimeout(timer); if (!json.success) throw new Error(json.message || "not sent"); },
+                function (e) { clearTimeout(timer); throw e; });
+      }
+
+      // Validate, then show the confirmation with WhatsApp / text / Instagram options
       var status = $("#copyStatus"), details = "";
       form.addEventListener("change", function () { err.textContent = ""; });
       var accounts = [
@@ -1446,10 +1525,11 @@
         e.preventDefault();
         err.textContent = "";
         $$("input:not([type=checkbox]):not([type=date]):not([type=number]), textarea", form).forEach(function (el) { el.value = el.value.trim(); });
+        checkPhone(false);
         var chosen = $$("input[name=services]:checked", form).map(function (cb) { return cb.value; });
         if (!form.checkValidity()) {
           form.reportValidity();
-          checkDate();
+          checkDate(); checkPhone(true);
           var missing = $$("[required]", form).some(function (el) { return el.validity.valueMissing; });
           err.textContent = missing ? "Please fill in the required fields." : "Please check your details and try again.";
           return;
@@ -1493,27 +1573,45 @@
         sms.href = "sms:+" + PHONE + "?&body=" + encodeURIComponent(details); // "?&" works on both iPhone and Android
         sms.hidden = !touch; // computers mostly can't send texts
 
-        // Offer a DM button for each business the visitor picked a service from
+        // One DM button: the business they picked from, or the main account when they picked from more than one
+        var MAIN_IG = "nidhashennadesigns";
+        var matched = accounts.filter(function (acc) {
+          return acc.services.some(function (sv) { return chosen.indexOf(sv) !== -1; });
+        });
+        var handle = matched.length === 1 ? matched[0].handle : MAIN_IG;
         var box = $("#dmLinks");
         box.innerHTML = "";
-        accounts.forEach(function (acc) {
-          if (!acc.services.some(function (sv) { return chosen.indexOf(sv) !== -1; })) return;
-          var a = document.createElement("a");
-          a.className = "btn btn--ghost btn--sm";
-          a.href = "https://ig.me/m/" + acc.handle;
-          a.rel = "noopener"; appTarget(a);
-          a.innerHTML = '<svg class="i"><use href="#i-insta"/></svg>';
-          a.appendChild(document.createTextNode("DM @" + acc.handle));
-          box.appendChild(a);
-        });
+        var a = document.createElement("a");
+        a.className = "btn btn--ghost btn--sm";
+        a.href = "https://ig.me/m/" + handle;
+        a.rel = "noopener"; appTarget(a);
+        a.innerHTML = '<svg class="i"><use href="#i-insta"/></svg>';
+        a.appendChild(document.createTextNode("DM @" + handle));
+        box.appendChild(a);
 
         status.textContent = "";
         $("#dmStep").hidden = true;
-        $("[data-out=name]").textContent = data.get("name").split(/\s+/)[0];
-        form.hidden = true;
-        thanks.hidden = false;
-        thanks.focus({ preventScroll: true });
-        thanks.scrollIntoView({ behavior: scrollBehavior(), block: "center" });
+        var first = data.get("name").split(/\s+/)[0];
+        function showThanks(state) {
+          var copy = {
+            sent: ["Request sent, " + first + "!", "Nidha will reach out to you soon at " + data.get("phone") + " with availability and a quote."],
+            failed: ["Almost there, " + first + "!", "We couldn't send your request automatically. Please send it to Nidha directly: your message is already written, just tap send."],
+            manual: ["Almost there, " + first + "!", "Online booking is coming soon. Send your details straight to Nidha: your message is already written, just tap send. We'll reply with availability and a quote."]
+          }[state];
+          $("#thanksTitle").textContent = copy[0];
+          $("#thanksText").textContent = copy[1];
+          $("#fastLane").hidden = state !== "sent";
+          form.hidden = true;
+          thanks.hidden = false;
+          thanks.focus({ preventScroll: true });
+          thanks.scrollIntoView({ behavior: scrollBehavior(), block: "center" });
+        }
+        if (!WEB3FORMS_KEY) { showThanks("manual"); return; }
+        var btn = $("#submitBtn");
+        btn.disabled = true;
+        $("#submitLabel").textContent = "Sending…";
+        sendRequest(rows, data).then(function () { showThanks("sent"); }, function () { showThanks("failed"); })
+          .then(function () { btn.disabled = false; $("#submitLabel").textContent = "Send request"; });
       });
       $("#copyDetails").addEventListener("click", copyDetails);
       $("#editForm").addEventListener("click", function () {
