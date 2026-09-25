@@ -66,18 +66,13 @@ The host's dashboard walks you through this. Choose **"Add custom domain"** and 
 
 DNS changes take anywhere from a few minutes to a few hours. HTTPS (the padlock) is free and automatic on all three hosts.
 
-## Step 5: Make the booking form send requests to Nidha
+## Step 5: Booking requests (set up)
 
-The form is already wired for **Web3Forms** (free, about 250 requests a month). Until a key is added, visitors send their details themselves by WhatsApp, text or Instagram, with the message already written for them.
+**How it works now:** the form emails each request through **Web3Forms** (free, about 250 a month) to `nidha@nidhasevents.com`, a free Porkbun forward that currently delivers to Nilesh's Gmail. A free **Zapier** Zap ("Gmail: New Email Matching Search `subject:\"New booking request\"`" → "SMS by Zapier") texts the email's subject, which holds the key details. The confirmation screen offers WhatsApp or text to (848) 667-1264 as a faster lane, and if sending ever fails visitors get those options instead.
 
-1. Go to <https://web3forms.com>, enter the email Nidha wants requests sent to, and copy the **access key** they email to that inbox.
-2. In `index.html`, find `var WEB3FORMS_KEY = "";` and paste the key between the quotes.
-
-That's it. The button changes to **Send request**, every request is emailed to her (tapping Reply answers the customer), and the confirmation screen offers WhatsApp or text as a faster lane. If sending ever fails, visitors are shown the WhatsApp, text and Instagram options instead, so no request is lost.
-
-**Optional texts:** to also get each request as a text, connect her Gmail to a free Zapier account ("New email matching search" → "SMS by Zapier" to her verified number).
-
-**Send one real test request before you announce the site.**
+- **Change who receives requests:** edit the `nidha` forward in Porkbun. Nothing on the site changes.
+- **Change who gets the texts:** in Zapier, edit the SMS step and connect the new number (the code goes to that phone). SMS by Zapier doesn't support T-Mobile numbers (including Mint, Metro, Google Fi).
+- **Turn automatic sending off:** set `var WEB3FORMS_KEY = "";` in `index.html`; visitors then send their details themselves.
 
 ## Step 6: A professional email address (optional)
 

@@ -21,16 +21,17 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://nidhasevents.com/share.jpg">
 
-  <link rel="icon" href="/favicon.ico" sizes="48x48">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="manifest" href="/site.webmanifest">
+  <!-- Relative paths so the icons also work when the page is opened as a file or served from a subfolder -->
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 
-  <!-- Helps Google show the business in local results. Update url/phone before launch. -->
+  <!-- Helps Google show the business in local results. Keep url, phone and email in step with the page. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -680,6 +681,7 @@
     <!-- ================= SERVICES OVERVIEW ================= -->
     <section class="section" id="services" style="padding-top: 0;">
       <div class="wrap">
+        <h2 class="sr-only">Our services</h2>
         <div class="svc-grid">
           <a class="svc svc--henna reveal" href="#henna">
             <svg class="svc__bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#mandala" width="100" height="100"/></svg>
@@ -1173,10 +1175,10 @@
           </ul>
         </div>
 
-        <div class="form reveal" id="check" tabindex="-1" aria-label="Check your date form">
-          <!-- Online requests aren't connected yet, so on submit the form copies the visitor's details
-               and sends them to Instagram DMs instead. To make it email requests, get a free access key
-               at web3forms.com and replace the "coming soon" handling in the script at the bottom. -->
+        <div class="form reveal" id="check" tabindex="-1" role="region" aria-label="Check your date form">
+          <!-- Requests are emailed to Nidha through Web3Forms (WEB3FORMS_KEY in the script at the bottom).
+               With the key set to "", or if sending fails, visitors send their details themselves by
+               WhatsApp, text or Instagram instead. -->
           <form id="bookingForm" novalidate>
             <h3>Check your date</h3>
             <p class="muted" id="bundleHint" style="margin:0">Takes about a minute.</p>
@@ -1247,7 +1249,7 @@
             </div>
           </form>
 
-          <div class="thanks" id="thanks" hidden tabindex="-1">
+          <div class="thanks" id="thanks" hidden tabindex="-1" role="region" aria-labelledby="thanksTitle">
             <svg class="thanks__mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#mandala" width="100" height="100"/></svg>
             <h3 id="thanksTitle">Almost there!</h3>
             <p class="muted" id="thanksText">Online booking is coming soon. Send your details straight to Nidha: your message is already written, just tap send. We'll reply with availability and a quote.</p>
@@ -1338,8 +1340,14 @@
         document.head.appendChild(um);
       }
       function track(name, data) { if (window.umami && window.umami.track) window.umami.track(name, data); }
-      // Name the taps worth counting; Umami records clicks on anything with data-umami-event
-      function label(sel, name) { $$(sel).forEach(function (el) { el.setAttribute("data-umami-event", typeof name === "function" ? name(el) : name); }); }
+      // Name the taps worth counting (data-track) and count them with one listener. Not Umami's own
+      // data-umami-event: its click handler cancels same-tab link taps and re-navigates once its request
+      // finishes, which stops phones opening the WhatsApp/Instagram apps and re-jumps #check links.
+      function label(sel, name) { $$(sel).forEach(function (el) { el.setAttribute("data-track", typeof name === "function" ? name(el) : name); }); }
+      document.addEventListener("click", function (e) {
+        var el = e.target && e.target.closest ? e.target.closest("[data-track]") : null;
+        if (el) track(el.getAttribute("data-track"));
+      });
 
       // Phones: open Instagram and WhatsApp links in the same tab, which lets iOS reliably open the app
       var touch = window.matchMedia && matchMedia("(hover: none) and (pointer: coarse)").matches;
@@ -1365,12 +1373,22 @@
         });
       });
 
-      // Footer year + no past dates in the picker
+      // Footer year + no past dates in the picker, and no typo years (Chrome accepts 6-digit years like 20266)
       $("#year").textContent = new Date().getFullYear();
-      var d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
       var dateInput = $("#f-date"), dateNote = $("#dateNote");
-      dateInput.min = d.toISOString().slice(0, 10);
-      function checkDate() { dateNote.hidden = !dateInput.validity.rangeUnderflow; }
+      function setDateRange() { // re-run on focus and submit so a tab left open overnight stays right
+        var d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        dateInput.min = d.toISOString().slice(0, 10);
+        d.setUTCFullYear(d.getUTCFullYear() + 5);
+        dateInput.max = d.toISOString().slice(0, 10);
+      }
+      setDateRange();
+      function checkDate() {
+        var v = dateInput.validity;
+        dateNote.textContent = v.rangeOverflow ? "Please check the year: that date is more than 5 years away." : "That date has passed. Please pick today or a later date.";
+        dateNote.hidden = !v.rangeUnderflow && !v.rangeOverflow;
+      }
+      dateInput.addEventListener("focus", setDateRange);
       dateInput.addEventListener("change", checkDate);
       dateInput.addEventListener("blur", checkDate);
 
@@ -1400,8 +1418,15 @@
       }
       phoneInput.addEventListener("input", function (e) {
         var v = phoneInput.value;
-        if (v.trim()[0] === "+" && v.replace(/\D/g, "")[0] !== "1") { checkPhone(false); return; }
         var caret = phoneInput.selectionStart == null ? v.length : phoneInput.selectionStart;
+        // Deleting the 1 of the automatic "+1 " prefix drops its "+" too, so what's left is read as a
+        // US number, not as an international one like "+7325550100"
+        if (/^delete/.test(e.inputType || "") && v.trim()[0] === "+" && lastDigits[0] === "1" &&
+            v.replace(/\D/g, "") === lastDigits.slice(1)) {
+          if (v.indexOf("+") < caret) caret--;
+          v = v.replace("+", "");
+        }
+        if (v.trim()[0] === "+" && v.replace(/\D/g, "")[0] !== "1") { lastDigits = v.replace(/\D/g, ""); checkPhone(false); return; }
         var before = v.slice(0, caret).replace(/\D/g, "").length, d = v.replace(/\D/g, "");
         // Backspacing over a bracket, space or dash removes the digit in front of it too
         if (e.inputType === "deleteContentBackward" && d === lastDigits && before > 0) {
@@ -1425,7 +1450,7 @@
 
       // Booking buttons: take people straight to the form, fill in what they picked, and show where to start
       var form = $("#bookingForm"), hint = $("#bundleHint"), err = $("#formError"), thanks = $("#thanks"), card = $("#check");
-      var DEFAULT_HINT = "Takes about a minute.", spotlightTimer;
+      var DEFAULT_HINT = "Takes about a minute.", spotlightTimer, sending = false;
       function showForm() {
         thanks.hidden = true; form.hidden = false;
         err.textContent = "";
@@ -1459,6 +1484,7 @@
       $$("[data-bundle]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           var name = btn.dataset.bundle;
+          if (sending) { goToForm(); return; } // a request is on its way: don't change what it will show
           showForm();
           setServices(btn.dataset.services ? btn.dataset.services.split("|") : [], true);
           $("#f-type").value = btn.dataset.event;
@@ -1470,7 +1496,7 @@
       $$('a[href="#check"]').forEach(function (a) {
         a.addEventListener("click", function (e) {
           e.preventDefault();
-          if (a.dataset.preset) {
+          if (a.dataset.preset && !sending) { // while a request is on its way, leave the form as sent
             showForm();
             setServices(a.dataset.preset.split("|"), false);
             hint.textContent = a.dataset.preset + " added. Fill in your details below.";
@@ -1551,7 +1577,7 @@
         e.preventDefault();
         err.textContent = "";
         $$("input:not([type=checkbox]):not([type=date]):not([type=number]), textarea", form).forEach(function (el) { el.value = el.value.trim(); });
-        checkPhone(false);
+        checkPhone(false); setDateRange();
         var chosen = $$("input[name=services]:checked", form).map(function (cb) { return cb.value; });
         if (!form.checkValidity()) {
           form.reportValidity();
@@ -1568,7 +1594,8 @@
         // One list feeds both the on-screen summary and the copied text, so what the visitor
         // sees (and can copy by hand if the clipboard fails) is the full message
         var data = new FormData(form);
-        var date = new Date(data.get("date") + "T12:00:00").toLocaleDateString(undefined, { weekday: "short", month: "long", day: "numeric", year: "numeric" });
+        // Always in English: this text goes to Nidha, whatever language the visitor's phone is set to
+        var date = new Date(data.get("date") + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric", year: "numeric" });
         var rows = [["Name", data.get("name")], ["Phone", data.get("phone")]];
         if (data.get("email")) rows.push(["Email", data.get("email")]);
         rows.push(
@@ -1611,6 +1638,7 @@
         a.className = "btn btn--ghost btn--sm";
         a.href = "https://ig.me/m/" + handle;
         a.rel = "noopener"; appTarget(a);
+        a.setAttribute("data-track", "Instagram DM: @" + handle);
         a.innerHTML = '<svg class="i"><use href="#i-insta"/></svg>';
         a.appendChild(document.createTextNode("DM @" + handle));
         box.appendChild(a);
@@ -1635,10 +1663,10 @@
         }
         if (!WEB3FORMS_KEY) { showThanks("manual"); return; }
         var btn = $("#submitBtn");
-        btn.disabled = true;
+        btn.disabled = true; sending = true;
         $("#submitLabel").textContent = "Sending…";
         sendRequest(rows, data).then(function () { showThanks("sent"); }, function () { showThanks("failed"); })
-          .then(function () { btn.disabled = false; $("#submitLabel").textContent = "Send request"; });
+          .then(function () { sending = false; btn.disabled = false; $("#submitLabel").textContent = "Send request"; });
       });
       $("#copyDetails").addEventListener("click", copyDetails);
       $("#editForm").addEventListener("click", function () {
@@ -1651,6 +1679,7 @@
       label('a[href="#check"]', function (a) { return a.dataset.preset ? "Book: " + a.dataset.preset : "Check your date"; });
       label("[data-bundle]", function (b) { return "Bundle: " + b.dataset.bundle; });
       label('a[href^="https://www.instagram.com/"]', function (a) { return "Instagram: @" + a.getAttribute("href").split("/")[3]; });
+      label('a[href^="https://ig.me/m/"]', function (a) { return "Instagram DM: @" + a.getAttribute("href").split("/")[4]; });
       label('a[href^="tel:"]', "Call");
       label('a[href^="mailto:"]', "Email");
       label(".contact-list a[href^=\"https://wa.me/\"], .footer a[href^=\"https://wa.me/\"]", "WhatsApp (contact)");
